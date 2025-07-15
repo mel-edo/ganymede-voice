@@ -3,7 +3,6 @@ import os
 from tts import speak
 
 # Opening and closing of system apps
-# close zen, code doesen't word - issue with pkill n flag
 
 apps = {
     ("browser", "zen", "then", "web browser"): {
@@ -66,7 +65,7 @@ async def close_app(app_key):
     
     try:
         proc_name = app['open'].strip().split()[0]
-        subprocess.Popen(["pkill", "-fn", proc_name])
+        subprocess.Popen(["pkill", "-n", proc_name])
         await speak(f"Closed {app['name']}")
 
     except Exception as e:

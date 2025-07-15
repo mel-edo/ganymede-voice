@@ -1,4 +1,4 @@
-from speech_recognition import transcribe, cleanup, listen_for_wake_word, register_wake_word_callback
+from speech_recognition import transcribe, cleanup, listen_for_wake_word, register_wake_word_callback, set_command_mode
 from commands import handle_command
 from ai_handler import cancel_task
 from tts import reset_tts_interrupt
@@ -15,15 +15,19 @@ wake_word_listener_task = None
 
 async def listen_for_command(timeout=7):
     print("Listening for your command...")
+    set_command_mode(True)
     start_time = time.time()
 
-    while time.time() - start_time < timeout:
-        text = await transcribe()
-        if text:
-            print("Command: ", text)
-            await handle_command(text)
-            return
-    print("No command heard")
+    try:
+        while time.time() - start_time < timeout:
+            text = await transcribe()
+            if text:
+                print("Command: ", text)
+                await handle_command(text)
+                return
+        print("No command heard")
+    finally:
+        set_command_mode(False)
 
 async def handle_wake_word(text):
     global current_task
@@ -36,6 +40,7 @@ async def handle_wake_word(text):
         except asyncio.CancelledError:
             pass
     
+    set_command_mode(False)
     reset_tts_interrupt()
     await play_ping()
     current_task = asyncio.create_task(listen_for_command())

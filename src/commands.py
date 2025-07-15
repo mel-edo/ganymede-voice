@@ -108,17 +108,18 @@ register(["resume music", "pause music", "boss music"], resume_music_cmd)
 register(["tell me a quote"], get_quote)
 register(["what's the weather", "weather"], weather_fetch)
 register(["jerk it a little"], jerk_it)
+register(["stop", "nothing", "cancel"], lambda: None)
 
 
 # Regex matchers
 regex_patterns = [
-    (re.compile(r"(?:set|change) volume to (\d{1,3})%?"), vol_set, 1, "set volume to"),
-    (re.compile(r"(?:set|change) brightness to (\d{1,3}%?)"), brightness_set, 1, "set brightness to"),
-    (re.compile(r"play (.+)"), stream_music, 1, "play"),
-    (re.compile(r"open (.+)"), launch_app, 1, "open"),
-    (re.compile(r"close (.+)"), close_app, 1, "close"),
-    (re.compile(r"search(?: for)? (.+)"), search_ddg, 1, "search for"),
-    (re.compile(r"(?:switch|change|move) to (\w+)"), workspace_switcher, 1, "switch to"),
+    (re.compile(r"(?:set|change) volume to (\d{1,3})%?"), vol_set, 1),
+    (re.compile(r"(?:set|change) brightness to (\d{1,3}%?)"), brightness_set, 1),
+    (re.compile(r"play (.+)"), stream_music, 1),
+    (re.compile(r"open (.+)"), launch_app, 1),
+    (re.compile(r"close (.+)"), close_app, 1),
+    (re.compile(r"search(?: for)? (.+)"), search_ddg, 1),
+    (re.compile(r"(?:switch|change|move) to (\w+)"), workspace_switcher, 1),
 ]
 
 
@@ -126,16 +127,13 @@ regex_patterns = [
 async def handle_command(text: str):
     
     # Keyword based handler
-    normalized_text = normalize_number(text.lower())
-    for pattern, func, group_index, expected_phrase in regex_patterns:
+    normalized_text = normalize_number(text.lower().strip())
+    for pattern, func, group_index in regex_patterns:
         match = pattern.search(normalized_text)
         if match:
-            prefix = match.group(1)
-            score = fuzz.partial_ratio(prefix.strip(), expected_phrase)
-            if score >= 70:
-                arg = match.group(group_index)
-                await func(arg)
-                return
+            arg = match.group(group_index)
+            await func(arg)
+            return
 
 
     # Fuzzy command handler
@@ -148,4 +146,3 @@ async def handle_command(text: str):
     else:
         # AI handler
         return await handle_ai_query(text)
-        pass
