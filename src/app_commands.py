@@ -3,6 +3,7 @@ import os
 from tts import speak
 
 # Opening and closing of system apps
+# Add support for more apps - maybe make it generalized to accept all apps if that's possible
 
 apps = {
     ("browser", "zen", "then", "web browser"): {

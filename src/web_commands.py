@@ -15,7 +15,7 @@ async def search_ddg(query: str):
 async def browse_random_art():
     danbooru = ["1girl", "blue_archive", "genshin_impact", "honkai_(series)", "zenless_zone_zero"]
     tag = random.choice(danbooru)
-    url = f"https://danbooru.donmai.us/posts/random?tags=rating:q,s+{tag}+-male_focus"
+    url = f"https://danbooru.donmai.us/posts/random?tags=rating:g+{tag}+-male_focus"
 
     webbrowser.open(url)
     await speak("Very well")
