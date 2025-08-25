@@ -7,7 +7,7 @@ from music import stream_music, stop_music, resume_music
 from fortune import get_fortune
 from ai_handler import handle_ai_query
 from app_commands import launch_app, close_app
-from web_commands import search_ddg, jerk_it_a_little
+from web_commands import search_ddg, browse_random_art
 from hypr import workspace_switcher
 from weather import get_weather
 from word2number import w2n
@@ -82,8 +82,8 @@ async def kill():
 async def weather_fetch():
     await get_weather()
 
-async def jerk_it():
-    await jerk_it_a_little()
+async def art():
+    await browse_random_art()
 
 async def stop_music_cmd():
     await stop_music()
@@ -107,7 +107,7 @@ register(["stop music"], stop_music_cmd)
 register(["resume music", "pause music", "boss music"], resume_music_cmd)
 register(["tell me a quote"], get_quote)
 register(["what's the weather", "weather"], weather_fetch)
-register(["jerk it a little"], jerk_it)
+register(["browse art", "random art", "show me art"], art)
 register(["stop", "nothing", "cancel"], lambda: None)
 
 
